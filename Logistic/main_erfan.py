@@ -35,7 +35,7 @@ def loss_func(nn_instance, t_train):
     boundary = torch.Tensor([T0])
     boundary.requires_grad = True
     boundary_loss = f(nn_instance, boundary) - F0
-    total_loss = interior_loss.pow(2).mean() + boundary_loss**2
+    total_loss = interior_loss.mean() + boundary_loss
     return total_loss
 
 def train_func(nn_instance, t_train, epochs=20_000, lr=0.01):
