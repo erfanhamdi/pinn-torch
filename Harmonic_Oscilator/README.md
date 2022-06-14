@@ -9,5 +9,5 @@ m\ddot{u} + \mu \dot{u} + ku = 0
 ![logisticReg](/Harmonic_Oscilator/figures/predicted.png)
 
 ## Citation
-- This wonderful post and visualization by Ben Moseley : [# So, what is a physics-informed neural network?](https://benmoseley.blog/my-research/so-what-is-a-physics-informed-neural-network/)
+- This wonderful post and visualization by Ben Moseley : [So, what is a physics-informed neural network?](https://benmoseley.blog/my-research/so-what-is-a-physics-informed-neural-network/)
 - This entry on Harmonic Oscilator  Belt of Orion: [Damped Harmonic Oscilator](https://beltoforion.de/en/harmonic_oscillator/)
