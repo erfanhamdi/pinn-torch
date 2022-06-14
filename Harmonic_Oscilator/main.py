@@ -102,8 +102,8 @@ if __name__ == "__main__":
     set_seed(42)
 
     # loading the training data on the boundary
-    x_data = np.loadtxt("Harmonic_Oscilator/x_data.csv")
-    y_data = np.loadtxt("Harmonic_Oscilator/y_data.csv")
+    x_data = np.loadtxt("Harmonic_Oscilator/data/x_data.csv")
+    y_data = np.loadtxt("Harmonic_Oscilator/data/y_data.csv")
     x_u = torch.tensor(x_data, requires_grad=True).reshape(x_data.shape[0], 1)
     y_u = torch.tensor(y_data, requires_grad=True).reshape(x_data.shape[0], 1)
     

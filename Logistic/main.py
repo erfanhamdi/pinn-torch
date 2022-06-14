@@ -131,5 +131,6 @@ if __name__ == "__main__":
     ax.plot(t_u.detach().numpy(), f_final.detach().numpy(), label="NN final solution")
     plt.xlabel(r't')
     plt.ylabel(r'$f(x)$')
+    plt.title("Logistic Equation")
     plt.savefig("Logistic/figures/logistic_pinn.png")
     plt.show()
