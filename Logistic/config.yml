@@ -1,0 +1,10 @@
+# Physics
+R: 1
+
+# Initial Condition
+T0: 0
+F0: 0
+
+# Training Params
+epochs: 20_000
+lr: 0.01
