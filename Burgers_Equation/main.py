@@ -4,9 +4,12 @@ import numpy as np
 import scipy.io
 import matplotlib.pyplot as plt
 from pyDOE import lhs
+from burgers_utils import newfig, savefig
 
 import torch
 import torch.nn as nn
+
+
 
 def set_seed(seed: int = 42):
     '''
@@ -159,8 +162,9 @@ if __name__ == "__main__":
     model.apply(init_weights)
     # Training
     model, loss_list = train(model, x_u, x_f, t_f, u_train, epochs=5_000, lr=0.001)
+
+    # save the model
+    torch.save(model.state_dict(), 'Burgers_Equation/model.pt')
     
-
-        
-
+    
 
