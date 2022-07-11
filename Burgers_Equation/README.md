@@ -7,19 +7,19 @@ This equation describes the movement of a viscous fluid with one spatial (x) and
 ## Data Prepration
 The boundary condition was taken to be 
 ```math
-u = 0\;   @ x = 1\\
-u = 0\;   @ x = -1\\
-u = 0\;   @ t = 0
+u &= 0\;   &@ x = 1\\
+u &= 0\;   &@ x = -1\\
+u &= 0\;   &@ t = 0
 ```
 ## Parameter Study
 1. The first test was done using the proposed Number of N_u and N_f but with full batch Adam optimizer and Xavier Normal initialization weights with a lr = 0.001 for 20k epochs
-![adam](Burgers_Equation/figures/adam_xavier_uniform_001_bias.png)
-
+![adam](/Burgers_Equation/figures/adam_xavier_uniform_001_bias.png)
 2. The second test was done using full batch L-BFGS and Normal Xavier Uniform initialization after 6899 epochs and the input data was shuffled.
-![adam](Burgers_Equation/figures/Screen Shot 2022-07-11 at 2.18.50 PM.png)
+![lbfgs](/Burgers_Equation/figures/lbfgs_xavier_uniform_shuffle.png)
 
 3. The third test has the same conditions to the second test but without shuffling the input data after 4763 epochs
-![lbfgs](/Burgers_Equation/figures/Screen Shot 2022-07-11 at 2.47.54 PM.png)
+![logisticReg](/Burgers_Equation/figures/lbfgs_xavier_uniform_no_shuffle.png)
+
 
 ## Citations
 data preprocessing was taken from this implementation [PINN-Burgers](https://github.com/EdgarAMO/PINN-Burgers)

@@ -78,7 +78,7 @@ def loss_function(model: BurgersNN, x_u: torch.Tensor, x_f: torch.Tensor, t_f: t
 
 def init_weights(m):
     if type(m) == nn.Linear:
-        torch.nn.init.xavier_uniform_(m.weight)
+        torch.nn.init.xavier_normal_(m.weight)
         m.bias.data.fill_(0.01)
 
 def closure(model: BurgersNN, optimizer, X_u_train: torch.Tensor, X_f_train:torch.Tensor, Y_u_train: torch.Tensor) -> torch.Tensor:
@@ -183,7 +183,7 @@ if __name__ == "__main__":
     model.train()
     train(model, X_u_train, X_f_train, u_train)
     # save the model
-    torch.save(model.state_dict(), 'Burgers_Equation/model_LBFGS_shuffle.pt')
+    torch.save(model.state_dict(), 'Burgers_Equation/model_LBFGS_shuffle_normal.pt')
     
     
 
