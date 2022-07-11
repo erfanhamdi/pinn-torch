@@ -3,3 +3,5 @@ Here I will try to implement the solution of PDEs using PINN on pytorch for educ
 ## Content
 - [Logistic Equation](Logistic/README.md)
 - [Harmonic Oscilator](Harmonic_Oscilator/README.md)
+- [Burgers Equation](Burgers_Equation/Readme.md)
+- 
