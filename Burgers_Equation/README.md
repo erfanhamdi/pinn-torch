@@ -10,7 +10,7 @@ The boundary condition was taken to be
 \begin{aligned}
 u &= 0  \;\;@ x &= 1\\
 u &= 0  \;\;@ x &= -1\\
-u &= 0  \;\;@ t &= 0
+u &= -sin(\pi x)  \;\;@ t &= 0
 \end{aligned}
 ```
 ## Parameter Study
