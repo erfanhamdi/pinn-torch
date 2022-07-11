@@ -8,9 +8,9 @@ This equation describes the movement of a viscous fluid with one spatial (x) and
 The boundary condition was taken to be 
 ```math
 \begin{aligned}
-u &= 0  @ x &= 1\\
-u &= 0  @ x &= -1\\
-u &= 0  @ t &= 0
+u &= 0  \;@ x &= 1\\
+u &= 0  \;@ x &= -1\\
+u &= 0  \;@ t &= 0
 \end{aligned}
 ```
 ## Parameter Study
