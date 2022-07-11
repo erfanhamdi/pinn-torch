@@ -1,4 +1,3 @@
-import yaml
 from random import uniform
 from functools import partial
 
@@ -183,7 +182,7 @@ if __name__ == "__main__":
     model.train()
     train(model, X_u_train, X_f_train, u_train)
     # save the model
-    torch.save(model.state_dict(), 'Burgers_Equation/model_LBFGS_shuffle_normal.pt')
+    torch.save(model.state_dict(), 'Burgers_Equation/models/model_LBFGS_shuffle_normal.pt')
     
     
 

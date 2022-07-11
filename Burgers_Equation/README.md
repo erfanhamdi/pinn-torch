@@ -31,4 +31,5 @@ u &= 0  \;\;@ t &= 0
 
 
 ## Citations
-data preprocessing was taken from this implementation [PINN-Burgers](https://github.com/EdgarAMO/PINN-Burgers)
+1. data preprocessing was taken from this implementation [PINN-Burgers](https://github.com/EdgarAMO/PINN-Burgers)
+2. plotting functions were taken from [PINN](https://github.com/maziarraissi/PINNs)

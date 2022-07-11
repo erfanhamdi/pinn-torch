@@ -1,18 +1,11 @@
-import numpy as np
 import matplotlib.pyplot as plt
-import scipy.io
-from scipy.interpolate import griddata
 from mpl_toolkits.axes_grid1 import make_axes_locatable
-import matplotlib.gridspec as gridspec
-import time
-from burgers_utils import newfig, savefig
-import torch.nn as nn
 import torch
 from main import BurgersNN
+
 # load model
 model = BurgersNN()
 model.load_state_dict(torch.load('Burgers_Equation/models/model_LBFGS_shuffle_normal.pt'))
-# model = torch.load('/Users/venus/Erfan/Obsidian/PINN/pinn-torch/Burgers_Equation/model.pt')
 x = torch.linspace(-1, 1, 200)
 t = torch.linspace( 0, 1, 100)
 
