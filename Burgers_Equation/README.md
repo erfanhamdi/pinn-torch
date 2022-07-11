@@ -13,11 +13,13 @@ u = 0\;   @ t = 0
 ```
 ## Parameter Study
 1. The first test was done using the proposed Number of N_u and N_f but with full batch Adam optimizer and Xavier Normal initialization weights with a lr = 0.001 for 20k epochs
-![[figs/adam_xavier_uniform_001_bias.png]]
+![adam](Burgers_Equation/figures/adam_xavier_uniform_001_bias.png)
 
-2. The second test was done using full batch L-BFGS and Normal Xavier Uniform initialization after 4763 epochs and the input data was shuffled.![[figs/Screen Shot 2022-07-11 at 2.18.50 PM.png]]
+2. The second test was done using full batch L-BFGS and Normal Xavier Uniform initialization after 6899 epochs and the input data was shuffled.
+![adam](Burgers_Equation/figures/Screen Shot 2022-07-11 at 2.18.50 PM.png)
 
-3. The third test has the same conditions to the second test but without shuffling the input data after 4763 epochs![[figs/Screen Shot 2022-07-11 at 2.47.54 PM.png]] 
+3. The third test has the same conditions to the second test but without shuffling the input data after 4763 epochs
+![lbfgs](/Burgers_Equation/figures/Screen Shot 2022-07-11 at 2.47.54 PM.png)
 
 ## Citations
 data preprocessing was taken from this implementation [PINN-Burgers](https://github.com/EdgarAMO/PINN-Burgers)
