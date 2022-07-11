@@ -7,9 +7,11 @@ This equation describes the movement of a viscous fluid with one spatial (x) and
 ## Data Prepration
 The boundary condition was taken to be 
 ```math
+\begin{aligned}
 u &= 0\;   &@ x = 1\\
 u &= 0\;   &@ x = -1\\
 u &= 0\;   &@ t = 0
+\end{aligned}
 ```
 ## Parameter Study
 1. The first test was done using the proposed Number of N_u and N_f but with full batch Adam optimizer and Xavier Normal initialization weights with a lr = 0.001 for 20k epochs
