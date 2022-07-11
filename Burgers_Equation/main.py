@@ -1,15 +1,14 @@
 import yaml
+from random import uniform
+from functools import partial
 
 import numpy as np
-import scipy.io
 import matplotlib.pyplot as plt
-from pyDOE import lhs
-from burgers_utils import newfig, savefig
 
 import torch
 import torch.nn as nn
 
-
+iter = 0
 
 def set_seed(seed: int = 42):
     '''
@@ -25,12 +24,12 @@ class BurgersNN(nn.Module):
     def __init__(self,):
         super(BurgersNN, self).__init__()
         # Input layer
-        self.linear_in = nn.Linear(2, 32)
+        self.linear_in = nn.Linear(2, 20)
         # Output layer
-        self.linear_out = nn.Linear(32, 1)
+        self.linear_out = nn.Linear(20, 1)
         # Hidden layers
         self.layers = nn.ModuleList(
-            [nn.Linear(32, 32) for i in range(2)]
+            [nn.Linear(20, 20) for i in range(8)]
         )
         # Activation function
         self.act = nn.Tanh()
@@ -82,89 +81,109 @@ def init_weights(m):
         torch.nn.init.xavier_uniform_(m.weight)
         m.bias.data.fill_(0.01)
 
-def train(model: BurgersNN, u_params: torch.Tensor, x_f: torch.Tensor,
-        t_f: torch.Tensor, y_u: torch.Tensor,
-        epochs: int = 100, lr: float = 0.001) -> BurgersNN:
+def closure(model: BurgersNN, optimizer, X_u_train: torch.Tensor, X_f_train:torch.Tensor, Y_u_train: torch.Tensor) -> torch.Tensor:
     """
-    This function trains the model on the input data
+    In order to use the LBFGS optimizer, we need to define a closure function. This function is called by the optimizer
+    and the optimizer contains the inner loop for the optimization and it continues until the tolerance is met.
     """
-    # Setting the optimizer
-    optimizer = torch.optim.Adam(model.parameters(), lr=lr)
-    loss_list = []
-    x_u = u_params[:, 0]
-    t_u = u_params[:, 1]
-    for i in range(epochs):
-        optimizer.zero_grad()
-        loss = loss_function(model, x_u, x_f, t_f, t_u, y_u)
-        loss_list.append(loss.item())
-        loss.backward()
-        optimizer.step()
-        if i % 1_000 == 0:
-            print(f'Epoch {i}: {loss.item()}')
-    return model, loss_list
+    x_u = X_u_train[:, 0]
+    t_u = X_u_train[:, 1]
+    x_f = X_f_train[:, 0]
+    t_f = X_f_train[:, 1]
+    y_u = Y_u_train
+    optimizer.zero_grad()
+    loss = loss_function(model, x_u, x_f, t_f, t_u, y_u)
+    loss.backward()
+    global iter
+    iter += 1
+    print(f" iteration: {iter}  loss: {loss.item()}")
+    return loss
 
+def train(model, X_u_train, X_f_train, u_train):
+    # Initialize the optimizer
+    optimizer = torch.optim.LBFGS(model.parameters(),
+                                    lr=1,
+                                    max_iter=50000,
+                                    max_eval=50000,
+                                    history_size=50,
+                                    tolerance_grad=1e-05,
+                                    tolerance_change=0.5 * np.finfo(float).eps,
+                                    line_search_fn="strong_wolfe")
 
-
+    # the optimizer.step requires the closure function to be a callable function without inputs
+    # therefore we need to define a partial function and pass it to the optimizer
+    closure_fn = partial(closure, model, optimizer, X_u_train, X_f_train, u_train)
+    optimizer.step(closure_fn)
 
 if __name__ == "__main__":
     # Set seed for reproducibility
     set_seed(42)
-    # Load config file
-    # with open("config.yaml", "r") as f:
-    #     config = yaml.safe_load(f)
-    
-    # Number of collocation points
-    N_f = 10_000
-    N_u = 100
 
-    # Collocation points
-    x_f = torch.linspace(0, 1, N_f, requires_grad=True)
-    t_f = torch.linspace(0, 1, N_f, requires_grad=True)
+    nu = 0.01 / np.pi         # constant in the diff. equation
+    N_u = 100                 # number of data points in the boundaries
+    N_f = 10000               # number of collocation points
 
-    # boundary conditions 
-    # at x = -1
-    data = scipy.io.loadmat('Burgers_Equation/burgers_shock.mat')
-    t = data['t'].flatten()[:,None]
-    x = data['x'].flatten()[:,None]
-    Exact = np.real(data['usol']).T
-    
-    X, T = np.meshgrid(x,t)
-    
-    X_star = np.hstack((X.flatten()[:,None], T.flatten()[:,None]))
-    u_star = Exact.flatten()[:,None]              
+    # X_u_train: a set of pairs (x, t) located at:
+        # x =  1, t = [0,  1]
+        # x = -1, t = [0,  1]
+        # t =  0, x = [-1, 1]
+    x_upper = np.ones((N_u//4, 1), dtype=float)
+    x_lower = np.ones((N_u//4, 1), dtype=float) * (-1)
+    t_zero = np.zeros((N_u//2, 1), dtype=float)
 
-    # Doman bounds
-    lb = X_star.min(0)
-    ub = X_star.max(0)    
-        
-    xx1 = np.hstack((X[0:1,:].T, T[0:1,:].T))
-    uu1 = Exact[0:1,:].T
-    xx2 = np.hstack((X[:,0:1], T[:,0:1]))
-    uu2 = Exact[:,0:1]
-    xx3 = np.hstack((X[:,-1:], T[:,-1:]))
-    uu3 = Exact[:,-1:]
+    t_upper = np.random.rand(N_u//4, 1)
+    t_lower = np.random.rand(N_u//4, 1)
+    x_zero = (-1) + np.random.rand(N_u//2, 1) * (1 - (-1))
+
+    # stack uppers, lowers and zeros:
+    X_upper = np.hstack( (x_upper, t_upper) )
+    X_lower = np.hstack( (x_lower, t_lower) )
+    X_zero = np.hstack( (x_zero, t_zero) )
+
+    # each one of these three arrays haS 2 columns, 
+    # now we stack them vertically, the resulting array will also have 2 
+    # columns and 100 rows:
+    X_u_train = np.vstack( (X_upper, X_lower, X_zero) )
+
+    # shuffle X_u_train:
+    index = np.arange(0, N_u)
+    np.random.shuffle(index)
+    X_u_train = X_u_train[index, :]
     
-    X_u_train = np.vstack([xx1, xx2, xx3])
-    X_f_train = lb + (ub-lb)*lhs(2, N_f)
-    X_f_train = np.vstack((X_f_train, X_u_train))
-    u_train = np.vstack([uu1, uu2, uu3])
-    
-    idx = np.random.choice(X_u_train.shape[0], N_u, replace=False)
-    X_u_train = X_u_train[idx, :]
-    x_u = torch.Tensor(X_u_train)
-    x_u.requires_grad = True
-    u_train = u_train[idx,:]
-    u_train = torch.Tensor(u_train)
-    u_train.requires_grad = True
-    
+    # make X_f_train:
+    X_f_train = np.zeros((N_f, 2), dtype=float)
+    for row in range(N_f):
+        x = uniform(-1, 1)  # x range
+        t = uniform( 0, 1)  # t range
+
+        X_f_train[row, 0] = x 
+        X_f_train[row, 1] = t
+
+    # add the boundary points to the collocation points:
+    X_f_train = np.vstack( (X_f_train, X_u_train) )
+
+    # make u_train
+    u_upper =  np.zeros((N_u//4, 1), dtype=float)
+    u_lower =  np.zeros((N_u//4, 1), dtype=float) 
+    u_zero = -np.sin(np.pi * x_zero)  
+
+    # stack them in the same order as X_u_train was stacked:
+    u_train = np.vstack( (u_upper, u_lower, u_zero) )
+
+    # match indices with X_u_train
+    u_train = u_train[index, :]
     # Model instantiation
     model = BurgersNN()
     model.apply(init_weights)
     # Training
-    model, loss_list = train(model, x_u, x_f, t_f, u_train, epochs=5_000, lr=0.001)
+    X_u_train = torch.from_numpy(X_u_train).requires_grad_(True).float()
+    X_f_train = torch.from_numpy(X_f_train).requires_grad_(True).float()
+    u_train = torch.from_numpy(u_train).requires_grad_(True).float()
 
+    model.train()
+    train(model, X_u_train, X_f_train, u_train)
     # save the model
-    torch.save(model.state_dict(), 'Burgers_Equation/model.pt')
+    torch.save(model.state_dict(), 'Burgers_Equation/model_LBFGS_shuffle.pt')
     
     
 

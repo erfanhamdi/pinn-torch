@@ -11,7 +11,7 @@ import torch
 from main import BurgersNN
 # load model
 model = BurgersNN()
-model.load_state_dict(torch.load('/Users/venus/Erfan/Obsidian/PINN/pinn-torch/Burgers_Equation/model.pt'))
+model.load_state_dict(torch.load('/Users/venus/Erfan/Obsidian/PINN/pinn-torch/Burgers_Equation/model_LBFGS_no_shuffle.pt'))
 # model = torch.load('/Users/venus/Erfan/Obsidian/PINN/pinn-torch/Burgers_Equation/model.pt')
 x = torch.linspace(-1, 1, 200)
 t = torch.linspace( 0, 1, 100)
