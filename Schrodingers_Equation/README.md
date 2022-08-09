@@ -19,6 +19,7 @@ This case was solved using [L-BFGS](https://erfanhamdi.github.io/blog_posts/l-bf
 |  Convergence animation  | 
 |:----------:|
 |![](/Schrodingers_Equation/figures/convergence.gif)
+<img src="/Schrodingers_Equation/figures/convergence.gif" alt="convergence animation" width="300" height="200"/>
 
 ## Acknowledgement
 1. plotting functions were taken from [PINN](https://github.com/maziarraissi/PINNs)
