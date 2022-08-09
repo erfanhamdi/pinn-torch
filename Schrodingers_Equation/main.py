@@ -48,6 +48,9 @@ def derivative(dy: torch.Tensor, x: torch.Tensor, order: int = 1) -> torch.Tenso
     return dy
 
 def f(model, x_f, t_f):
+    """
+    This function evaluates the PDE at collocation points.
+    """
     h = model(torch.stack((x_f, t_f), axis = 1))
     u = h[:, 0]
     v = h[:, 1]
@@ -60,32 +63,50 @@ def f(model, x_f, t_f):
     return f_u, f_v
 
 def mse_f(model, x_f, t_f):
+    """
+    This function calculates the MSE for the PDE.
+    """
     f_u, f_v = f(model, x_f, t_f)
     return (f_u**2 + f_v**2).mean()
 
 def mse_0(model, x_0, u_0, v_0):
-    # x_0 = x_0.flatten().T
+    """
+    This function calculates the MSE for the initial condition.
+    """
+    # creating a t_0 variable to be the same shape as the x_0 but with zero values
     t_0 = torch.zeros_like(x_0)
     h = model(torch.stack((x_0, t_0), axis = 1))
+    # extracting the u and v values from the model output
     h_u = h[:, 0]
     h_v = h[:, 1]
     return ((h_u-u_0)**2+(h_v-v_0)**2).mean()
 
 def mse_b(model, t_b):
+    """
+    This function calculates the MSE for the boundary condition.
+    """
+    # x_b is the boundary points which have to be between -5 and 5
     x_b_left = torch.zeros_like(t_b)-5
     x_b_left.requires_grad = True
+    # evaluating the function on the left side boundary
     h_b_left = model(torch.stack((x_b_left, t_b), axis = 1))
+    # extracting the u and v values from the model output
     h_u_b_left = h_b_left[:, 0]
-    h_u_b_left_x = derivative(h_u_b_left, x_b_left, 1)
     h_v_b_left = h_b_left[:, 1]
+    # evaluating the derivative of the parameters of the function on the left boundary
+    h_u_b_left_x = derivative(h_u_b_left, x_b_left, 1)
     h_v_b_left_x = derivative(h_v_b_left, x_b_left, 1)
     
+    # x_b is the boundary points on +5
     x_b_right = torch.zeros_like(t_b)+5
     x_b_right.requires_grad = True
+    # evaluating the function on the right side boundary
     h_b_right = model(torch.stack((x_b_right, t_b), axis = 1))
+    # extracting the u and v values from the model output
     h_u_b_right = h_b_right[:, 0]
-    h_u_b_right_x = derivative(h_u_b_right, x_b_right, 1)
     h_v_b_right = h_b_right[:, 1]
+    # evaluating the derivative of the parameters of the function on the right boundary
+    h_u_b_right_x = derivative(h_u_b_right, x_b_right, 1)
     h_v_b_right_x = derivative(h_v_b_right, x_b_right, 1)
 
     mse_drichlet = (h_u_b_left-h_u_b_right)**2+(h_v_b_left-h_v_b_right)**2
@@ -95,12 +116,19 @@ def mse_b(model, t_b):
     return mse_total
 
 def init_weights(m):
+    """
+    This function initializes the weights of the model by the normal Xavier initialization method.
+    """
     if type(m) == nn.Linear:
         torch.nn.init.xavier_normal_(m.weight)
         m.bias.data.fill_(0.01)
 
 def closure(model, optimizer, x_f, t_f, x_0, u_0, v_0, h_0, t):
+    """
+    The closure function to use L-BFGS optimization method.
+    """
     optimizer.zero_grad()
+    # evaluating the MSE for the PDE
     loss = mse_f(model, x_f, t_f) + mse_0(model, x_0, u_0, v_0) + mse_b(model, t)
     loss.backward(retain_graph=True)
     global iter
@@ -129,14 +157,14 @@ def train(model,  x_f, t_f, x_0, u_0, v_0, h_0, t):
 if __name__== "__main__":
     set_seed(42)
 
-    # Load the data
+    # Upper and lower bounds of the spatial and temporal domains
     lb = np.array([-5.0, 0.0])
     ub = np.array([5.0, np.pi/2])
-
-    N0 = 50
-    N_b = 50
-    N_f = 20000
-
+    # Number of initial, boundary and collocation points
+    N0 = 50 # initial condition points
+    N_b = 50 # boundary points
+    N_f = 20_000 # collocation points
+    # Loading the training points
     data = sp.loadmat('Schrodingers_Equation/data/NLS.mat')
     x_0 = torch.from_numpy(data['x'].astype(np.float32))
     x_0.requires_grad = True
@@ -147,6 +175,7 @@ if __name__== "__main__":
     t = t.flatten().T
 
     h = torch.from_numpy(data['uu'])
+
     # Slicing the initial value of h and saving it as u_0 and v_0
     u_0 = torch.real(h)[:, 0]
     v_0 = torch.imag(h) [:, 0]
@@ -171,10 +200,12 @@ if __name__== "__main__":
     idx_b = np.random.choice(t.shape[0], N_b,replace = False )
     t_b = t[idx_b]
 
+    # Instantiate the model
     model = SchrodingerNN()
+    # Apply the initialization function to the model weights
     model.apply(init_weights)
 
-
+    # Training the model
     model.train()
     train(model, x_f, t_f, x_0, u_0, v_0, h_0, t)
     torch.save(model.state_dict(), 'Schrodingers_Equation/models/model_LBFGS.pt')

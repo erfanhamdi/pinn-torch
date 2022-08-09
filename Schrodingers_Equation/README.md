@@ -15,10 +15,7 @@ h_x(t, -5) &= h_x(t, 5)
 ```
 ## Parameter Study
 This case was solved using [L-BFGS](https://erfanhamdi.github.io/blog_posts/l-bfgs/lbfgs.html) optimization method.
-
-|        Adam, 20k   | LBFGS, 6.9k, Xavier-Uniform, shuffle | LBFGS, 4.7k, Xavier-Normal, shuffle  |  LBFGS, 4.7k, Xavier-Uniform, no-shuffle  |
-|:----------:|:-------------:|:-------------:|:-------------:|
-|![](/Burgers_Equation/figures/adam_20k.png)|![](/Burgers_Equation/figures/lbfgs_xavier_uniform_shuffle.png)|![](/Burgers_Equation/figures/lbfgs_xavier_normal_shuffle.png)|![](/Burgers_Equation/figures/lbfgs_xavier_uniform_no_shuffle.png)
+![](/Schrodingers_Equation/figures/convergence.gif)
 
 
 ## Acknowledgement
