@@ -12,6 +12,8 @@ __pycache__/
 build/
 develop-eggs/
 dist/
+Schrodingers_Equation/models/
+Schrodingers_Equation/output/
 downloads/
 eggs/
 .eggs/

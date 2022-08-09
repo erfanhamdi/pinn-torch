@@ -13,7 +13,7 @@ from PIL import Image
 def make_gif():
     frames = [Image.open(image) for image in sorted(Path("output/").iterdir(), key=os.path.getmtime)[1:]]
     frame_one = frames[0]
-    frame_one.save("convergence.gif", format="GIF", append_images=frames,
+    frame_one.save("figures/convergence.gif", format="GIF", append_images=frames,
                save_all=True, duration=100, loop=1)
 
 
@@ -32,12 +32,12 @@ input = torch.cat((xcol, tcol), 1)
 
 paths = sorted(Path("models/").iterdir(), key=os.path.getmtime)
 # print(paths)
-for idx, model_add in enumerate(paths[:200]):
+for idx, model_add in enumerate(paths[-2:-1]):
     
     fig = plt.figure(figsize=(9, 4.5))
     # model iteration number 
     iter = model_add.stem.split("_")[-1]
-    plt.title(r'$|h(t, x)|$ @ iteration: '+iter, fontsize=16)
+    plt.title(r'$|h(t, x)|$', fontsize=16)
     plt.xlabel(r'$t$', fontsize=14)
     plt.ylabel(r'$x$', fontsize=14)
 
@@ -70,4 +70,4 @@ for idx, model_add in enumerate(paths[:200]):
     plt.savefig("output/" + str(model_add).split('/')[1].split('.')[0] + '.png')
     plt.close()
 
-make_gif()
+# make_gif()
