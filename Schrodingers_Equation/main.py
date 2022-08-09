@@ -102,10 +102,12 @@ def init_weights(m):
 def closure(model, optimizer, x_f, t_f, x_0, u_0, v_0, h_0, t):
     optimizer.zero_grad()
     loss = mse_f(model, x_f, t_f) + mse_0(model, x_0, u_0, v_0) + mse_b(model, t)
-    loss.backward()
+    loss.backward(retain_graph=True)
     global iter
     iter += 1
     print(f" iteration: {iter}  loss: {loss.item()}")
+    if iter%30==0:
+        torch.save(model.state_dict(), f'Schrodingers_Equation/models/model_LBFGS_{iter}.pt')
     return loss
 
 def train(model,  x_f, t_f, x_0, u_0, v_0, h_0, t):
@@ -135,7 +137,7 @@ if __name__== "__main__":
     N_b = 50
     N_f = 20000
 
-    data = sp.loadmat('Schrodingers_Equation/NLS.mat')
+    data = sp.loadmat('Schrodingers_Equation/data/NLS.mat')
     x_0 = torch.from_numpy(data['x'].astype(np.float32))
     x_0.requires_grad = True
     x_0 = x_0.flatten().T
@@ -159,11 +161,12 @@ if __name__== "__main__":
 
     # Sampling from the initial, boundary and collocation values
     # Sample N0 points from the initial value
-    # idx_0 = np.random.choice(x_0.shape[0], N0, replace = False)
-    # x_0 = x_0[idx_0]
-    # u_0 = u_0[idx_0]
-    # v_0 = v_0[idx_0]
-    # h_0 = h_0[idx_0]
+    idx_0 = np.random.choice(x_0.shape[0], N0, replace = False)
+    x_0 = x_0[idx_0]
+    u_0 = u_0[idx_0]
+    v_0 = v_0[idx_0]
+    h_0 = h_0[idx_0]
+
     # # Sample Nb points from boundary values
     idx_b = np.random.choice(t.shape[0], N_b,replace = False )
     t_b = t[idx_b]
