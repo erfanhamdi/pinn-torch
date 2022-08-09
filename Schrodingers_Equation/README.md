@@ -2,14 +2,14 @@
 ## Intro
 The one-dimensional nonlinear Schrodinger equation is a classical field equation that is used to study quantum mechanical systems, including nonlinear wave propagation in optical fibers and/or waveguides, Bose-Einstein condensates, and plasma waves. The nonlinear 1-D Schrodinger equation is:
 ```math
-i\frac{\partial h}{\partial t} + 0.5\frac{\partial^2 h}{\partial x^2} + \abs{h}^2h = 0
+i\frac{\partial h}{\partial t} + 0.5\frac{\partial^2 h}{\partial x^2} + |h|^2h = 0
 ```
 ## Data Prepration
 In this case a periodic boundary condition was used
 ```math
 \begin{aligned}
-h(0, x) &= 2sech(x)
-h(t, -5) &= h(t, 5)
+h(0, x) &= 2sech(x)\\
+h(t, -5) &= h(t, 5)\\
 h_x(t, -5) &= h_x(t, 5)
 \end{aligned}
 ```
