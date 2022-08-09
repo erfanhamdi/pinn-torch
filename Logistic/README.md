@@ -10,6 +10,6 @@ P(0) = 1
 ## Results
 ![logisticReg](/Logistic/figures/logistic_pinn.png)
 
-## Citation
+## Acknowledgement
 - This wonderful post on Towards DataScience by Mario Dagrada : [Introduction to Physics Informed Neural Networks.](https://towardsdatascience.com/solving-differential-equations-with-neural-networks-afdcf7b8bcc4)
 - This entry on Logistic Equation on Mathematics LibreText : [The Logistic Equation](https://math.libretexts.org/Bookshelves/Calculus/Book%3A_Calculus_(OpenStax)/08%3A_Introduction_to_Differential_Equations/8.4%3A_The_Logistic_Equation)

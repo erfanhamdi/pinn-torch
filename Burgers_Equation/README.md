@@ -30,6 +30,6 @@ u &= -sin(\pi x)  \;\;@ t &= 0
 |![](/Burgers_Equation/figures/adam_20k.png)|![](/Burgers_Equation/figures/lbfgs_xavier_uniform_shuffle.png)|![](/Burgers_Equation/figures/lbfgs_xavier_normal_shuffle.png)|![](/Burgers_Equation/figures/lbfgs_xavier_uniform_no_shuffle.png)
 
 
-## Citations
+## Acknowledgement
 1. data preprocessing was taken from this implementation [PINN-Burgers](https://github.com/EdgarAMO/PINN-Burgers)
 2. plotting functions were taken from [PINN](https://github.com/maziarraissi/PINNs)
