@@ -15,8 +15,10 @@ h_x(t, -5) &= h_x(t, 5)
 ```
 ## Parameter Study
 This case was solved using [L-BFGS](https://erfanhamdi.github.io/blog_posts/l-bfgs/lbfgs.html) optimization method.
-![](/Schrodingers_Equation/figures/convergence.gif)
 
+|  Convergence animation  | 
+|:----------:|
+|![](/Schrodingers_Equation/figures/convergence.gif)
 
 ## Acknowledgement
 1. plotting functions were taken from [PINN](https://github.com/maziarraissi/PINNs)
