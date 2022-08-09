@@ -17,7 +17,7 @@ h_x(t, -5) &= h_x(t, 5)
 This case was solved using [L-BFGS](https://erfanhamdi.github.io/blog_posts/l-bfgs/lbfgs.html) optimization method.
 
 |        Convergence animation   | LBFGS, 6.9k, Loss 1.47e-5 |
-|:----------:|:-------------:|:-------------:|:-------------:|
+|:----------:|:-------------:|
 |![](/Schrodingers_Equation/figures/convergence.gif)|![](/Schrodingers_Equation/figures/model_LBFGS_6960.png)|
 
 ## Acknowledgement
