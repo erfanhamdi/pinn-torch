@@ -5,7 +5,7 @@ from main import SchrodingerNN
 
 # load model
 model = SchrodingerNN()
-model.load_state_dict(torch.load('models/model_LBFGS_1590.pt'))
+model.load_state_dict(torch.load('models/model_LBFGS_3780.pt'))
 
 # input variables to the model
 x = torch.linspace(-5, 5, 200)
