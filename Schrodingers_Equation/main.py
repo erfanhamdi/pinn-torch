@@ -207,5 +207,5 @@ if __name__== "__main__":
 
     # Training the model
     model.train()
-    train(model, x_f, t_f, x_0, u_0, v_0, h_0, t)
+    train(model, x_f, t_f, x_0, u_0, v_0, h_0, t_b)
     torch.save(model.state_dict(), 'Schrodingers_Equation/models/model_LBFGS.pt')
